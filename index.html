@@ -145,7 +145,7 @@ canvas{display:block;width:100%;height:100%;image-rendering:pixelated;image-rend
         <div><h3>Le karma</h3>
           <p>Chaque décision compte. Prendre ou refuser une enveloppe, protéger ou livrer quelqu’un, garder ou rendre : tout s’inscrit dans le karma de Kan.</p>
           <p><b class="bun">Bun</b>, le mérite. <b class="baap">Baap</b>, la dette.</p>
-          <p>Le compte s’affiche à la fin de chaque tableau. À l’aube, il décide de la fin.</p>
+          <p>Le compte s’affiche à la fin de chaque acte. À l’aube, il décide de la fin.</p>
         </div>
       </div>
       <div class="row"><button class="btn" id="howtoGo">Entrer dans la nuit</button></div>
@@ -808,7 +808,7 @@ async function boyCall(){
 }
 function tickAppart(dt){
   if(S.f.called)return;S.apT=(S.apT||0)+dt;
-  if(!busy&&!adv&&S.apT>120)boyCall();
+  if(!busy&&!adv&&S.apT>60)boyCall();
 }
 const HS_A=[
   {id:'altar',name:'Autel',kind:'object',r:[108,108,124,94],look:'Ma grand-mère, Luang Por Chah et un bouquet de jasmin en plastique. Les trois ne fanent jamais.',act:'J’allume une bougie de plus. Pour elle. Pour Vahl, aussi.'},
@@ -1432,7 +1432,7 @@ async function endAct(){
   await deduce();
   await fade(1,1400);
   $('act2').hidden=false;synth('boom');await wait(3800);$('act2').hidden=true;
-  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Déductions : ${(S.ded||[]).length} sur 2 · Esprits observés : ${S.spirits.length} sur 8`;
+  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Déductions : ${(S.ded||[]).length} sur 2 · Esprits observés : ${S.spirits.length} sur 8`+(S.f.bun||S.f.baap?` · Bun ${S.f.bun||0} / baap ${S.f.baap||0}`:'');
   $('endnext').textContent='Acte 2 · le réseau. Tableau 7 : le toit de Mr. Teo, à Sathorn.';NEXT=['roof',38,348,1];$('cont').hidden=false;
   $('endcard').hidden=false;
 }
@@ -1587,9 +1587,7 @@ async function liftEnd(){
   await narr('Mon père regarde les chiffres défiler et ne répond pas.');
   await narr('Lundi, quatre heures. Trois jours pour arrêter un dieu qui voyage avec la bénédiction de la police. Et avant, il faut que j’aille voir l’homme qui a tatoué tout le monde.');
   await fade(1,1400);
-  const ec=$('endcard');ec.querySelector('.kicker').textContent='Fin du tableau 7';ec.querySelector('h2').textContent='À suivre';
-  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Esprits observés : ${S.spirits.length}`+(S.f.bun||S.f.baap?` · Bun ${S.f.bun||0} / baap ${S.f.baap||0}`:'');
-  $('endnext').textContent='Tableau 8 : le samnak d’Ajarn Pradit, à Nonthaburi.';NEXT=['samnak',95,345,-1];$('cont').hidden=false;ec.hidden=false;
+  S.candles=3;renderBar();await goScene(...['samnak',95,345,-1]);
 }
 function drawLift(){ctx.fillStyle='#0b0b0e';ctx.fillRect(0,0,W,H);
   const fl=Math.max(0,42-Math.floor((T-liftT)*1.2));ctx.fillStyle='#1a1408';ctx.fillRect(296,60,48,26);ctx.fillStyle='#ffb347';ctx.font='bold 18px monospace';ctx.textAlign='center';ctx.fillText(fl?String(fl):'G',320,80);ctx.textAlign='start';
@@ -1790,9 +1788,7 @@ async function samnakEnd(){
   play('moto',.8);await fade(1,1200);setAmb(null,0,1.5);
   await narr('L’assassin de Vahl a perdu sa protection, et il le sait. Il croit encore que personne d’autre ne le sait.');
   await narr('Il me reste une chose à faire avant lundi. Le livre dort chez les esprits de mon père. Ce soir, je vais réveiller Mae Sri.');
-  const ec=$('endcard');ec.querySelector('.kicker').textContent='Fin du tableau 8';ec.querySelector('h2').textContent='À suivre';
-  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Esprits observés : ${S.spirits.length} · Bun ${S.f.bun||0} / baap ${S.f.baap||0}`;
-  $('endnext').textContent='Tableau 9 : le Butterfly Cage, après la fermeture.';NEXT=['bar9',40,345,1];$('cont').hidden=false;ec.hidden=false;
+  S.candles=3;renderBar();await goScene(...['bar9',40,345,1]);
 }
 const HS_SAM=[
   {id:'nok',name:'Nok',kind:'person',r:()=>{const p=nokP();return prR('nok',p.x,p.y,.6);},at:()=>[nokP().x-55,Math.max(300,nokP().y+6)],face:1,talk:talkNok,
@@ -2098,9 +2094,7 @@ async function pradSeq(){
   await say('kan','Luang Por Dee. Par le khlong. Il faut un bateau, Boy. Un bateau qui va plus vite que la peur.');
   await say('boy2','Pi… Mon oncle Chai a une barque, à Thonburi. Il dit qu’elle va vite quand on n’a pas peur des morts.');
   await narr('Lung Chai. Le vieux pêcheur du ponton. Le seul homme de Bangkok qui avait peur du bon fantôme.');
-  const ec=$('endcard');ec.querySelector('.kicker').textContent='Fin du tableau 10';ec.querySelector('h2').textContent='À suivre';
-  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Esprits observés : ${S.spirits.length} · Bun ${S.f.bun||0} / baap ${S.f.baap||0}`;
-  $('endnext').textContent='Tableau 11 : le khlong de nuit.';NEXT=['khlong',-999,300,1];$('cont').hidden=false;ec.hidden=false;
+  S.candles=3;renderBar();await goScene(...['khlong',-999,300,1]);
 }
 const HS_CRATE=[
   {id:'budd',name:'Le Bouddha',kind:'object',r:[205,60,250,270],look:'Le Bouddha de Prasat Krahom. Une main levée, l’autre posée sur ses genoux. Il a l’air d’attendre que quelqu’un lui rende quelque chose.',act:'Soixante kilos de bronze. Je ne peux pas l’emporter.',
@@ -2284,9 +2278,7 @@ async function tpl11Enter(){
   S.dry=1;fadeLoop('pluie',0,3);setAmb(null,0,3);await wait(1500);
   await narr('Lung Chai coupe le moteur. La pluie s’arrête. Pour la première fois depuis une semaine.');
   await fade(1,1400);
-  const ec=$('endcard');ec.querySelector('.kicker').textContent='Fin du tableau 11';ec.querySelector('h2').textContent='À suivre';
-  $('endstats').textContent=`Indices trouvés : ${S.clues.length} · Esprits observés : ${S.spirits.length} · Bun ${S.f.bun||0} / baap ${S.f.baap||0}`;
-  $('endnext').textContent='Tableau 12 : le ponton, à l’aube.';NEXT=['aube',60,330,1];$('cont').hidden=false;ec.hidden=false;
+  S.candles=3;renderBar();await goScene(...['aube',60,330,1]);
 }
 let BUD=[462,272,1.1];
 function drawTpl11(){
@@ -2315,6 +2307,14 @@ async function talkLpd12(){
   if(S.f.pr12)return say('lpd','Le commandant attend ta réponse. Moi, j’ai le temps.');
   await say('lpd','Le commandant arrive, mae chi. Je l’entends prier dans sa voiture.');
   await prasert12();
+}
+async function giveAmulet12(){
+  busy=true;updateStatus();lose('amulette');S.f.amRet=1;S.f.bun=(S.f.bun||0)+1;
+  await narr('Je tends à Luang Por Dee l’écrin de Teo.');
+  await say('lpd','Une tête de Bouddha de Lopburi. On l’a arrachée à une statue, comme on arrache une dent.');
+  await say('kan','Teo me l’a offerte pour que je lui doive quelque chose.');
+  await say('lpd','Les moines de la frontière la rapporteront chez elle. Maintenant, tu ne lui dois plus rien.');
+  busy=false;updateStatus();
 }
 async function prasert12(){
   busy=true;updateStatus();S.f.pr12=1;
@@ -2353,7 +2353,7 @@ async function prasert12(){
   clue('La lettre entière de Vahl');
   await narr('Une bonne chose. Vahl comptait mieux que moi.');
   const se=S.f.somEnd;
-  if(se==='temoin'){S.somA=1;await narr('Mon père arrive à pied par le parvis, pas rasé, sa chemise de la veille.');
+  if(se==='temoin'){S.som12A=1;await narr('Mon père arrive à pied par le parvis, pas rasé, sa chemise de la veille.');
     await say('somsak','J’ai réfléchi toute la nuit. C’est la première fois que je réfléchis toute une nuit sans boire. Si tu as encore besoin d’un témoin, ma fille, je suis là.');}
   else if(se==='parti'){play('vibe',.8);setTimeout(()=>play('vibe',.8),900);toast('Le téléphone de Kan vibre. Grand-mère.');await wait(1400);
     await narr('Ma grand-mère, au téléphone : « Ton père est arrivé cette nuit. Il dort sur ma natte. Je l’ai pas encore tué. J’attends ton avis. »');}
@@ -2396,14 +2396,14 @@ async function epilogue(){
 }
 function drawEpi(){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);if(S.card&&IMG[S.card])ctx.drawImage(IMG[S.card],0,0,W,H);}
 const HS_AUBE=[
-  {id:'lpd',name:'Luang Por Dee',kind:'person',r:[176,182,54,36],at:[248,240],face:-1,talk:talkLpd12,look:'Luang Por Dee, assis sur la marche du temple. Il regarde le khlong comme s’il attendait quelqu’un. Cette fois, je crois qu’il attend que je parte.'},
+  {id:'lpd',name:'Luang Por Dee',kind:'person',r:[176,182,54,36],at:[248,240],face:-1,talk:talkLpd12,give:{amulette:giveAmulet12},look:'Luang Por Dee, assis sur la marche du temple. Il regarde le khlong comme s’il attendait quelqu’un. Cette fois, je crois qu’il attend que je parte.'},
   {id:'lung',name:'Lung Chai',kind:'person',r:[520,215,50,50],at:[505,270],face:1,talk:async()=>say('lung','Le farang nous a laissés passer, cette nuit. Je lui dois une bougie.'),look:'Lung Chai amarre sa barque. Il ne prie plus.'},
   {id:'boy',name:'Boy',kind:'person',r:[262,172,78,60],at:[345,252],face:-1,talk:async()=>narr('Il ronfle. Je le laisse dormir. Il l’a mérité.'),look:'Il dort sur sa moto, le casque sur les yeux. Il a passé la nuit à m’attendre. Je lui dois trois paquets de cigarettes et une tante.'},
   {id:'house',name:'Maison des esprits',kind:'object',r:[25,130,90,170],look:'Quelqu’un a changé la guirlande. Bien nouée, cette fois.'},
   {id:'pradit12',name:'Ajarn Pradit',kind:'person',r:()=>!S.prA&&!S.f.pr12?[208,206,34,34]:[0,0,0,0],at:[262,248],face:-1,
     talk:async()=>{await say('pradit','Le moine m’a dit d’attendre. J’attends.');await narr('Il ne me regarde pas. Il regarde le Bouddha qui n’est plus là.');},
     look:'Pradit, à genoux au pied de la marche. Il n’a pas bougé de la nuit. Il attend qu’on vienne le chercher, et pour une fois, il sait qui viendra.'},
-  {id:'som12',name:'Somsak, mon père',kind:'person',r:()=>S.somA?prR('som12',A12.som.x,A12.som.y,1):[0,0,0,0],at:[172,330],face:-1,talk:talkSom12,look:'Mon père, pas rasé, la chemise de la veille. Il a les yeux clairs de quelqu’un qui n’a pas bu. Je ne les lui connaissais pas.'},
+  {id:'som12',name:'Somsak, mon père',kind:'person',r:()=>S.som12A?prR('som12',A12.som.x,A12.som.y,1):[0,0,0,0],at:[172,330],face:-1,talk:talkSom12,look:'Mon père, pas rasé, la chemise de la veille. Il a les yeux clairs de quelqu’un qui n’a pas bu. Je ne les lui connaissais pas.'},
   {id:'houses',name:'Les maisons sur pilotis',kind:'object',r:[430,150,210,40],look:'Les maisons sur pilotis se réveillent. Une femme jette l’eau de la vaisselle dans le khlong. Ici, on boit le khlong, on mange le khlong, et on lui rend tout le reste.'},
   {id:'parvis',name:'Le parvis (partir)',kind:'exit',cur:'exitL',r:[0,180,24,178],at:[28,335],face:-1,
     act:async()=>{if(!S.f.done12)return say('kan','Pas encore. Il me reste une chose à régler ce matin.');await epilogue();},
@@ -2427,7 +2427,7 @@ function drawAube(){
   if(S.prA)L.push({y:A12.pr.y,d:()=>dr('prastand',A12.pr.x,A12.pr.y,0,false,1.0)});
   if(!S.prA&&!S.f.pr12)L.push({y:238,d:()=>dr('pradit',226,238,1,true,.86)});
   if(S.prA)L.push({y:298,d:()=>dr('pradcuff',305,298,0,false,1.01)});
-  if(S.somA)L.push({y:A12.som.y,d:()=>dr('som12',A12.som.x,A12.som.y,0,false,.95)});
+  if(S.som12A)L.push({y:A12.som.y,d:()=>dr('som12',A12.som.x,A12.som.y,0,false,.95)});
   if(scn==='aube')L.push({y:kan.y,d:drawKanC});
   L.sort((a,b)=>a.y-b.y).forEach(o=>o.d());
   if(sati){
